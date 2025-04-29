@@ -60,6 +60,7 @@ contract Lending is Ownable {
         if(amount == 0 || s_userCollateral[msg.sender] < amount){
             revert Lending__InvalidAmount();
         }
+
         uint256 newCollateral = s_userCollateral[msg.sender] - amount;
         s_userCollateral[msg.sender] = newCollateral;
 
@@ -153,5 +154,41 @@ contract Lending is Ownable {
      * @dev The caller must have enough CORN to pay back user's debt
      * @dev The caller must have approved this contract to transfer the debt
      */
-    function liquidate(address user) public {}
+    function liquidate(address user) public {
+        if (!isLiquidatable(user)) {
+            revert Lending__NotLiquidatable(); // Revert if position is not liquidatable
+        }
+
+        uint256 userDebt = s_userBorrowed[user]; // Get user's borrowed amount
+
+        if (i_corn.balanceOf(msg.sender) < userDebt) {
+            revert Lending__InsufficientLiquidatorCorn();
+        }
+
+        uint256 userCollateral = s_userCollateral[user]; // Get user's collateral balance
+        uint256 collateralValue = calculateCollateralValue(user); // Calculate user's collateral value
+
+        // transfer value of debt to the contract
+        i_corn.transferFrom(msg.sender, address(this), userDebt);
+
+        // burn the transferred corn
+        i_corn.burnFrom(address(this), userDebt);
+
+        // Clear user's debt
+        s_userBorrowed[user] = 0;
+
+        // calculate collateral to purchase (maintain the ratio of debt to collateral value)
+        uint256 collateralPurchased = (userDebt * userCollateral) / collateralValue;
+        uint256 liquidatorReward = (collateralPurchased * LIQUIDATOR_REWARD) / 100;
+        uint256 amountForLiquidator = collateralPurchased + liquidatorReward;
+        amountForLiquidator = amountForLiquidator > userCollateral ? userCollateral : amountForLiquidator; // Ensure we don't exceed user's collateral
+
+        s_userCollateral[user] = userCollateral - amountForLiquidator;
+
+        // transfer 110% of the collateral needed to cover the debt to the liquidator
+        (bool sent,) = payable(msg.sender).call{ value: amountForLiquidator }("");
+        require(sent, "Failed to send Ether");
+
+        emit Liquidation(user, msg.sender, amountForLiquidator, userDebt, i_cornDEX.currentPrice());
+    }
 }
