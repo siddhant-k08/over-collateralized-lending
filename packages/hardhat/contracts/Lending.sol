@@ -114,13 +114,38 @@ contract Lending is Ownable {
      * @notice Allows users to borrow corn based on their collateral
      * @param borrowAmount The amount of corn to borrow
      */
-    function borrowCorn(uint256 borrowAmount) public {}
+    function borrowCorn(uint256 borrowAmount) public {
+        if(borrowAmount == 0){
+            revert Lending__InvalidAmount();
+        }
+
+        s_userBorrowed[msg.sender] += borrowAmount;
+        _validatePosition(msg.sender);
+        bool success = i_corn.mintTo(msg.sender, borrowAmount);
+        if(!success){
+            revert Lending__BorrowingFailed();
+        }
+
+        emit AssetBorrowed(msg.sender, borrowAmount, i_cornDEX.currentPrice());
+    }
 
     /**
      * @notice Allows users to repay corn and reduce their debt
      * @param repayAmount The amount of corn to repay
      */
-    function repayCorn(uint256 repayAmount) public {}
+    function repayCorn(uint256 repayAmount) public {
+        if(repayAmount > s_userBorrowed[msg.sender] || repayAmount ==0){
+            revert Lending__InvalidAmount();
+        }
+
+        s_userBorrowed[msg.sender] -= repayAmount;
+        bool success = i_corn.burnFrom(msg.sender, repayAmount);
+        if(!success){
+            revert Lending__RepayingFailed();
+        }
+
+        emit AssetRepaid(msg.sender, repayAmount, i_cornDEX.currentPrice());
+    }
 
     /**
      * @notice Allows liquidators to liquidate unsafe positions

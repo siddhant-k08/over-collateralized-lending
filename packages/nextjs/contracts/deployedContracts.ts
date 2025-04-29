@@ -803,7 +803,22 @@ const deployedContracts = {
         },
         {
           inputs: [],
+          name: "Lending__BorrowingFailed",
+          type: "error",
+        },
+        {
+          inputs: [],
           name: "Lending__InvalidAmount",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "Lending__RepayingFailed",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "Lending__UnsafePositionRatio",
           type: "error",
         },
         {
