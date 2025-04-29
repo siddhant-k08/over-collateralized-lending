@@ -97,7 +97,7 @@ contract Lending is Ownable {
      */
     function isLiquidatable(address user) public view returns (bool) {
         uint256 positionRatio = _calculatePositionRatio(user);
-        return (positionRatio * 100) <COLLATERAL_RATIO * 1e18; 
+        return (positionRatio * 100) < COLLATERAL_RATIO * 1e18;
     }
 
     /**
@@ -105,7 +105,7 @@ contract Lending is Ownable {
      * @param user The address of the user to validate
      */
     function _validatePosition(address user) internal view {
-        if(isLiquidatable(user) == true){
+        if (isLiquidatable(user)) {
             revert Lending__UnsafePositionRatio();
         }
     }
