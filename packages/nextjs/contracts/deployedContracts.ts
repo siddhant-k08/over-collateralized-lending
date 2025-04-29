@@ -802,6 +802,11 @@ const deployedContracts = {
           type: "constructor",
         },
         {
+          inputs: [],
+          name: "Lending__InvalidAmount",
+          type: "error",
+        },
+        {
           inputs: [
             {
               internalType: "address",

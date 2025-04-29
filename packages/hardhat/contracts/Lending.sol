@@ -45,7 +45,7 @@ contract Lending is Ownable {
      * @notice Allows users to add collateral to their account
      */
     function addCollateral() public payable {
-        if(msg.value > 0) {
+        if(msg.value == 0) {
             revert Lending__InvalidAmount();
         }
         s_userCollateral[msg.sender] += msg.value;
@@ -56,7 +56,17 @@ contract Lending is Ownable {
      * @notice Allows users to withdraw collateral as long as it doesn't make them liquidatable
      * @param amount The amount of collateral to withdraw
      */
-    function withdrawCollateral(uint256 amount) public {}
+    function withdrawCollateral(uint256 amount) public {
+        if(amount == 0 || s_userCollateral[msg.sender] < amount){
+            revert Lending__InvalidAmount();
+        }
+        uint256 newCollateral = s_userCollateral[msg.sender] - amount;
+        s_userCollateral[msg.sender] = newCollateral;
+
+        payable(msg.sender).transfer(amount);
+
+        emit CollateralWithdrawn(msg.sender, amount, i_cornDEX.currentPrice());
+    }
 
     /**
      * @notice Calculates the total collateral value for a user based on their collateral balance
