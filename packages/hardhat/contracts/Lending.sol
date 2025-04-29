@@ -44,7 +44,13 @@ contract Lending is Ownable {
     /**
      * @notice Allows users to add collateral to their account
      */
-    function addCollateral() public payable {}
+    function addCollateral() public payable {
+        if(msg.value > 0) {
+            revert Lending__InvalidAmount();
+        }
+        s_userCollateral[msg.sender] += msg.value;
+        emit CollateralAdded(msg.sender, msg.value, i_cornDEX.currentPrice());
+    }
 
     /**
      * @notice Allows users to withdraw collateral as long as it doesn't make them liquidatable
