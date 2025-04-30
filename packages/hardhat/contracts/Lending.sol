@@ -63,7 +63,7 @@ contract Lending is Ownable {
         if(s_userBorrowed[msg.sender] != 0){
             _validatePosition(msg.sender);
         }
-        
+
         uint256 newCollateral = s_userCollateral[msg.sender] - amount;
         s_userCollateral[msg.sender] = newCollateral;
 
@@ -194,4 +194,20 @@ contract Lending is Ownable {
 
         emit Liquidation(user, msg.sender, amountForLiquidator, userDebt, i_cornDEX.currentPrice());
     }
+
+    function flashLoan(IFlashLoanRecipient _recipient, uint256 _amount, address _extraParam) public {
+        // Send the loan to the recipient 
+        i_corn.mintTo(address(_recipient), _amount);
+
+        // Execute the operation - It should return the loan back to this contract
+        bool success = _recipient.executeOperation(_amount, msg.sender, _extraParam);
+        require(success, "Operation was successful");
+
+        // Burn the loan - Should revert if it doesn't have enough
+        i_corn.burnFrom(address(this), _amount);
+    }
+}
+
+interface IFlashLoanRecipient{
+    function executeOperation(uint256 amount, address initiator, address extraParam) external returns(bool);
 }
