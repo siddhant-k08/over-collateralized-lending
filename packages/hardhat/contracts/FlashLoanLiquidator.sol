@@ -1,8 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-import "./Corn.sol";
-import "./CornDEX.sol";
+import { Lending } from "Lending.sol";
+import { Corn } from "./Corn.sol";
+import { CornDEX } from "./CornDEX.sol";
 
 contract FlashLoanLiquidator{
     
