@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.20;
 
-import { Lending } from "Lending.sol";
+import { Lending } from "./Lending.sol";
 import { Corn } from "./Corn.sol";
 import { CornDEX } from "./CornDEX.sol";
 
@@ -17,9 +17,9 @@ contract FlashLoanLiquidator{
         i_cornDEX = CornDEX(_cornDEX);
     }
     
-    function executeOperation(uint256 amount, address initiator, address extraParam) public returns(bool){
+    function executeOperation(uint256 amount, address initiator, address toLiquidate) public returns(bool){
         // Approve the lending contract to spend the tokens
-        i_corn.approve(address(i_Lending), amount);
+        i_corn.approve(address(i_lending), amount);
 
         // First liquidate to get the collateral tokens
         i_lending.liquidate(toLiquidate);
@@ -42,5 +42,5 @@ contract FlashLoanLiquidator{
         return true;
     }
 
-    recieve() external payable {}
+    receive() external payable {}
 }
