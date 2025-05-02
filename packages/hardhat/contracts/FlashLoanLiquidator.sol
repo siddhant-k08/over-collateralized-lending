@@ -7,10 +7,17 @@ import { CornDEX } from "./CornDEX.sol";
 
 contract FlashLoanLiquidator{
     
-    Corn private i_corn;
-    CornDEX private i_cornDEX;
+    Lending i_Lending;
+    Corn i_corn;
+    CornDEX i_cornDEX;
+
+    constructor(address _lending, address _cornDEX, address _corn){
+        i_Lending = Lending(_lending);
+        i_corn = Corn(_corn);
+        i_cornDEX = CornDEX(_cornDEX);
+    }
     
     function executeOperation(uint256 amount, address initiator, address extraParam) public returns(bool){
-        i_cornDEX.swap(amount);
+        //
     }
 }
