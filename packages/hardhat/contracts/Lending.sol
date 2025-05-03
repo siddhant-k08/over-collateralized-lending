@@ -216,6 +216,19 @@ contract Lending is Ownable {
         // Calculate max borrow amount while maintaining the required collateral ratio
         return (collateralValue * 100) / COLLATERAL_RATIO;
     }
+
+    function getMaxWithdrawableCollateral(address user) public view returns(uint256){
+        uint256 borrowedAmount = s_userBorrowed[user];
+        uint256 userCollateral = s_userCollateral[user];
+
+        uint256 maxBorrowedAmount = getMaxBorrowAmount(userCollateral);
+        if(borrowedAmount == maxBorrowedAmount) return 0;
+
+        uint256 potentialBorrowingAmount = maxBorrowedAmount - borrowedAmount;
+        uint256 ethValueOfPotenialBorrowingAmount = (potentialBorrowingAmount * 1e18) / i_cornDEX.currentPrice();
+
+        return (ethValueOfPotenialBorrowingAmount * COLLATERAL_RATIO) / 100;
+    }
 }
 
 interface IFlashLoanRecipient{
