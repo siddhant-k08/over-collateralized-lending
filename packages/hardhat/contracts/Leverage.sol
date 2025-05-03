@@ -32,4 +32,11 @@ contract Leverage{
         i_corn.approve(address(i_cornDEX), type(uint256).max);
     }
 
+    /**
+    * @notice Claim ownership of the contract so that no one else can change your position or withdraw your funds
+    */
+    function claimOwnership() public {
+        owner = msg.sender;
+    }
+
 }
