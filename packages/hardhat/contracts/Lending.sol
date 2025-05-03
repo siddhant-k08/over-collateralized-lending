@@ -206,6 +206,16 @@ contract Lending is Ownable {
         // Burn the loan - Should revert if it doesn't have enough
         i_corn.burnFrom(address(this), _amount);
     }
+
+    function getMaxBorrowAmount(uint256 ethCollateralAmount) public returns(uint256){
+        if(ethCollateralAmount == 0) return 0;
+
+        // Calculate collateral value in CORN terms
+        uint256 collateralValue = (ethCollateralAmount * i_cornDEX.currentPrice()) / 1e18;
+
+        // Calculate max borrow amount while maintaining the required collateral ratio
+        return (collateralValue * 100) / COLLATERAL_RATIO;
+    }
 }
 
 interface IFlashLoanRecipient{
