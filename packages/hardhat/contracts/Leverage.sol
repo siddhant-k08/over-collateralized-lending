@@ -51,5 +51,17 @@ contract Leverage{
         }
         emit LeveragedPositionOpened(msg.sender, loops);
     }
+    
+    /**
+     * @notice Close a leveraged position, recursively withdrawing collateral, swapping it for CORN, and repaying the lending contract until the position is closed
+     */
+    function closeLeveragedPosition() public onlyOwner {
+        uint256 loops = 0;
+        while (true) {
+            // Write more code here
+            loops++;
+        }
+        emit LeveragedPositionClosed(msg.sender, loops);
+    }
 
 }
