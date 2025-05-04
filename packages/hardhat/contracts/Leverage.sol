@@ -51,7 +51,7 @@ contract Leverage{
         }
         emit LeveragedPositionOpened(msg.sender, loops);
     }
-    
+
     /**
      * @notice Close a leveraged position, recursively withdrawing collateral, swapping it for CORN, and repaying the lending contract until the position is closed
      */
@@ -62,6 +62,16 @@ contract Leverage{
             loops++;
         }
         emit LeveragedPositionClosed(msg.sender, loops);
+    }
+
+    /**
+     * @notice Withdraw the ETH from the contract
+     */
+    function withdraw() public onlyOwner {
+        uint256 balance = address(this).balance;
+        require(balance > 0, "No balance to withdraw");
+        (bool success, ) = payable(msg.sender).call{value: balance}("");
+        require(success, "Failed to send Ether");
     }
 
 }
