@@ -74,4 +74,5 @@ contract Leverage{
         require(success, "Failed to send Ether");
     }
 
+    receive() external payable {}
 }
