@@ -16,8 +16,8 @@ contract Leverage{
     Corn i_corn;
     address public owner;
 
-    event LeveragePositionOpened(address user, uint256 loops);
-    event LeveragePositionClosed(address user, uint256 loops);
+    event LeveragedPositionOpened(address user, uint256 loops);
+    event LeveragedPositionClosed(address user, uint256 loops);
 
     modifier onlyOwner(){
         require(msg.sender == owner, "Only the owner can call this function");
@@ -37,6 +37,19 @@ contract Leverage{
     */
     function claimOwnership() public {
         owner = msg.sender;
+    }
+
+    /**
+     * @notice Open a leveraged position, recursively borrowing CORN, swapping it for ETH, and adding it as collateral
+     * @param reserve The amount of ETH that we will keep in the contract as a reserve to prevent liquidation
+     */
+    function openLeveragedPosition(uint256 reserve) public payable onlyOwner {
+        uint256 loops = 0;
+        while (true) {
+            // Write more code here
+            loops++;
+        }
+        emit LeveragedPositionOpened(msg.sender, loops);
     }
 
 }
