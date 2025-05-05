@@ -60,13 +60,22 @@ contract Leverage{
         emit LeveragedPositionOpened(msg.sender, loops);
     }
 
-    /**
-     * @notice Close a leveraged position, recursively withdrawing collateral, swapping it for CORN, and repaying the lending contract until the position is closed
-     */
     function closeLeveragedPosition() public onlyOwner {
         uint256 loops = 0;
         while (true) {
-            // Write more code here
+            uint256 maxWithdrawable = i_lending.getMaxWithdrawableCollateral(address(this));
+            i_lending.withdrawCollateral(maxWithdrawable);
+            require(maxWithdrawable == address(this).balance, "maxWithdrawable is not equal to balance");
+            i_cornDEX.swap{value:maxWithdrawable}(maxWithdrawable);
+            uint256 cornBalance = i_corn.balanceOf(address(this));
+            uint256 amountToRepay = cornBalance > i_lending.s_userBorrowed(address(this)) ? i_lending.s_userBorrowed(address(this)) : cornBalance;
+            if (amountToRepay > 0) {
+                i_lending.repayCorn(amountToRepay);
+            } else {
+                // Swap the remaining CORN to ETH since we don't want CORN exposure
+                i_cornDEX.swap(i_corn.balanceOf(address(this)));
+                break;
+            }
             loops++;
         }
         emit LeveragedPositionClosed(msg.sender, loops);
