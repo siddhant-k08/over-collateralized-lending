@@ -46,7 +46,15 @@ contract Leverage{
     function openLeveragedPosition(uint256 reserve) public payable onlyOwner {
         uint256 loops = 0;
         while (true) {
-            // Write more code here
+            uint256 balance = address(this).balance;
+            i_lending.addCollateral{value: balance}();
+            if (balance <= reserve) {
+                break;
+            }
+            uint256 maxBorrowAmount = i_lending.getMaxBorrowAmount(balance);
+            i_lending.borrowCorn(maxBorrowAmount);
+            
+            i_cornDEX.swap(maxBorrowAmount);
             loops++;
         }
         emit LeveragedPositionOpened(msg.sender, loops);
