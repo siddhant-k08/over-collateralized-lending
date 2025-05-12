@@ -1134,6 +1134,44 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "uint256",
+              name: "ethCollateralAmount",
+              type: "uint256",
+            },
+          ],
+          name: "getMaxBorrowAmount",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "user",
+              type: "address",
+            },
+          ],
+          name: "getMaxWithdrawableCollateral",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
               internalType: "address",
               name: "user",
               type: "address",
@@ -1266,6 +1304,122 @@ const deployedContracts = {
         renounceOwnership: "@openzeppelin/contracts/access/Ownable.sol",
         transferOwnership: "@openzeppelin/contracts/access/Ownable.sol",
       },
+    },
+    Leverage: {
+      address: "0x610178dA211FEF7D417bC0e6FeD39F05609AD788",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "_lending",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "_cornDEX",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "_corn",
+              type: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "address",
+              name: "user",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "loops",
+              type: "uint256",
+            },
+          ],
+          name: "LeveragedPositionClosed",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "address",
+              name: "user",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "loops",
+              type: "uint256",
+            },
+          ],
+          name: "LeveragedPositionOpened",
+          type: "event",
+        },
+        {
+          inputs: [],
+          name: "claimOwnership",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "closeLeveragedPosition",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "reserve",
+              type: "uint256",
+            },
+          ],
+          name: "openLeveragedPosition",
+          outputs: [],
+          stateMutability: "payable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "owner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "withdraw",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          stateMutability: "payable",
+          type: "receive",
+        },
+      ],
+      inheritedFunctions: {},
     },
     MovePrice: {
       address: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9",
@@ -2612,7 +2766,7 @@ const deployedContracts = {
       },
     },
     Leverage: {
-      address: "0x18Ec70ba29Bf05281Cab62eeD911f02CdCD941A3",
+      address: "0xCD9EbF01C0DB302De23F4696D8c1a24FcF0C1b73",
       abi: [
         {
           inputs: [
