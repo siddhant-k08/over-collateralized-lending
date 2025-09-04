@@ -4,8 +4,7 @@ import React, { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
-import { CreditCardIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, BugAntIcon, HomeIcon, ChartBarIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, RainbowKitCustomConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick } from "~~/hooks/scaffold-eth";
 
@@ -19,17 +18,18 @@ export const menuLinks: HeaderMenuLink[] = [
   {
     label: "Home",
     href: "/",
+    icon: <HomeIcon className="h-4 w-4" />,
   },
   {
     label: "Dashboard",
     href: "/dashboard",
-    icon: <CreditCardIcon className="h-4 w-4" />,
+    icon: <ChartBarIcon className="h-4 w-4" />,
   },
-  {
-    label: "Debug Contracts",
-    href: "/debug",
-    icon: <BugAntIcon className="h-4 w-4" />,
-  },
+  // {
+  //   label: "Debug",
+  //   href: "/debug",
+  //   icon: <BugAntIcon className="h-4 w-4" />,
+  // },
 ];
 
 export const HeaderMenuLinks = () => {
@@ -45,8 +45,10 @@ export const HeaderMenuLinks = () => {
               href={href}
               passHref
               className={`${
-                isActive ? "bg-secondary shadow-md" : ""
-              } hover:bg-secondary hover:shadow-md focus:!bg-secondary active:!text-neutral py-1.5 px-3 text-sm rounded-full gap-2 grid grid-flow-col`}
+                isActive 
+                  ? "bg-primary text-primary-content shadow-glow" 
+                  : "hover:bg-base-200 hover:text-primary transition-all duration-200"
+              } flex items-center gap-2 py-2 px-4 text-sm font-medium rounded-lg transition-all duration-200`}
             >
               {icon}
               <span>{label}</span>
@@ -70,47 +72,54 @@ export const Header = () => {
   );
 
   return (
-    <div className="sticky lg:static top-0 navbar bg-base-100 min-h-0 flex-shrink-0 justify-between z-20 shadow-md shadow-secondary px-0 sm:px-2">
-      <div className="navbar-start w-auto lg:w-1/2">
-        <div className="lg:hidden dropdown" ref={burgerMenuRef}>
-          <label
-            tabIndex={0}
-            className={`ml-1 btn btn-ghost ${isDrawerOpen ? "hover:bg-secondary" : "hover:bg-transparent"}`}
-            onClick={() => {
-              setIsDrawerOpen(prevIsOpenState => !prevIsOpenState);
-            }}
-          >
-            <Bars3Icon className="h-1/2" />
-          </label>
-          {isDrawerOpen && (
-            <ul
-              tabIndex={0}
-              className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-              onClick={() => {
-                setIsDrawerOpen(false);
-              }}
-            >
+    <header className="sticky top-0 z-50 bg-base-100/80 backdrop-blur-md border-b border-base-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo and Brand */}
+          <div className="flex items-center gap-4">
+            <div className="lg:hidden" ref={burgerMenuRef}>
+              <button
+                className="p-2 rounded-lg hover:bg-base-200 transition-colors duration-200"
+                onClick={() => setIsDrawerOpen(prev => !prev)}
+              >
+                <Bars3Icon className="h-6 w-6" />
+              </button>
+              {isDrawerOpen && (
+                <div className="absolute top-16 left-4 right-4 bg-base-100 rounded-xl shadow-lg border border-base-300 p-4 animate-slide-up">
+                  <ul className="space-y-2">
+                    <HeaderMenuLinks />
+                  </ul>
+                </div>
+              )}
+            </div>
+            
+            <Link href="/" className="flex items-center gap-3 group">
+              <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-glow">
+                <span className="text-primary-content font-bold text-lg">D</span>
+              </div>
+              <div className="hidden sm:block">
+                <h1 className="font-space-grotesk font-bold text-lg text-base-content group-hover:text-primary transition-colors duration-200">
+                  DeFi Lending
+                </h1>
+                <p className="text-xs text-base-content/60">Secure Over-collateralized Loans</p>
+              </div>
+            </Link>
+          </div>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden lg:flex items-center space-x-1">
+            <ul className="flex items-center space-x-1">
               <HeaderMenuLinks />
             </ul>
-          )}
+          </nav>
+
+          {/* Wallet Connection */}
+          <div className="flex items-center gap-3">
+            <FaucetButton />
+            <RainbowKitCustomConnectButton />
+          </div>
         </div>
-        <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0">
-          <div className="flex relative w-10 h-10">
-            <Image alt="SE2 logo" className="cursor-pointer" fill src="/logo.svg" />
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold leading-tight">SRE Challenges</span>
-            <span className="text-xs">Over-collateralized Lending</span>
-          </div>
-        </Link>
-        <ul className="hidden lg:flex lg:flex-nowrap menu menu-horizontal px-1 gap-2">
-          <HeaderMenuLinks />
-        </ul>
       </div>
-      <div className="navbar-end flex-grow mr-4">
-        <RainbowKitCustomConnectButton />
-        <FaucetButton />
-      </div>
-    </div>
+    </header>
   );
 };
