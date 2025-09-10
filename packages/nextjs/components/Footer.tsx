@@ -61,7 +61,23 @@ export const Footer = () => {
           <div className="md:col-span-2">
             <div className="flex items-center gap-3 mb-4">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                <span className="text-primary-content font-bold text-lg">D</span>
+                <svg 
+                  className="w-6 h-6 text-primary-content" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {/* Main building/block representing collateral */}
+                  <rect x="4" y="8" width="6" height="8" rx="1" fill="currentColor" opacity="0.8"/>
+                  {/* Stacked blocks representing over-collateralization */}
+                  <rect x="11" y="6" width="6" height="10" rx="1" fill="currentColor" opacity="0.9"/>
+                  <rect x="11" y="4" width="6" height="2" rx="1" fill="currentColor" opacity="0.7"/>
+                  {/* Arrow representing lending/borrowing */}
+                  <path d="M8 12L12 8M12 8L16 12M12 8V16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.6"/>
+                  {/* Small dots representing tokens/assets */}
+                  <circle cx="6" cy="6" r="1" fill="currentColor" opacity="0.5"/>
+                  <circle cx="18" cy="6" r="1" fill="currentColor" opacity="0.5"/>
+                </svg>
               </div>
               <div>
                 <h3 className="font-space-grotesk font-bold text-xl text-base-content">DeFi Lending</h3>
@@ -109,17 +125,6 @@ export const Footer = () => {
                 >
                   <CodeBracketSquareIcon className="h-4 w-4" />
                   Fork on GitHub
-                </a>
-              </li>
-              <li>
-                <a 
-                  href="https://t.me/joinchat/KByvmRe5wkR-8F_zz6AjpA" 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="flex items-center gap-2 text-base-content/70 hover:text-primary transition-colors duration-200"
-                >
-                  <ChatBubbleLeftRightIcon className="h-4 w-4" />
-                  Support Chat
                 </a>
               </li>
               <li>

@@ -95,13 +95,29 @@ export const Header = () => {
             
             <Link href="/" className="flex items-center gap-3 group">
               <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-glow">
-                <span className="text-primary-content font-bold text-lg">D</span>
+                <svg 
+                  className="w-6 h-6 text-primary-content" 
+                  viewBox="0 0 24 24" 
+                  fill="none" 
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  {/* Main building/block representing collateral */}
+                  <rect x="4" y="8" width="6" height="8" rx="1" fill="currentColor" opacity="0.8"/>
+                  {/* Stacked blocks representing over-collateralization */}
+                  <rect x="11" y="6" width="6" height="10" rx="1" fill="currentColor" opacity="0.9"/>
+                  <rect x="11" y="4" width="6" height="2" rx="1" fill="currentColor" opacity="0.7"/>
+                  {/* Arrow representing lending/borrowing */}
+                  <path d="M8 12L12 8M12 8L16 12M12 8V16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity="0.6"/>
+                  {/* Small dots representing tokens/assets */}
+                  <circle cx="6" cy="6" r="1" fill="currentColor" opacity="0.5"/>
+                  <circle cx="18" cy="6" r="1" fill="currentColor" opacity="0.5"/>
+                </svg>
               </div>
               <div className="hidden sm:block">
-                <h1 className="font-space-grotesk font-bold text-lg text-base-content group-hover:text-primary transition-colors duration-200">
+                <h1 className="font-space-grotesk font-bold text-lg text-base-content group-hover:text-primary transition-colors duration-200 mt-2">
                   DeFi Lending
                 </h1>
-                <p className="text-xs text-base-content/60">Secure Over-collateralized Loans</p>
+                <p className="text-xs text-base-content/60 -mt-3">Secure Over-collateralized Loans</p>
               </div>
             </Link>
           </div>
